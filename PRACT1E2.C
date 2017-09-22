@@ -5,6 +5,7 @@
 #include <graphics.h>
 
 /*Variables globales*/
+unsigned int grafica=0;
 unsigned int i=0;
 unsigned int segundos=0;
 unsigned int limite;
@@ -88,6 +89,8 @@ int main (){
 
 	printf("Escribe la frecuencia que sea mayor a 18\n");
 	scanf("%d", &val);
+	printf("Escribe la frecuencia con la que se desea graficar\n");
+	scanf("%d",&grafica);
 	if(val>18){
 	confi();
 	printf("\n");
@@ -105,7 +108,7 @@ int main (){
 				VD=Aalto*256+Bbajo;
 				VA=(float)VD*5/4096;
 				temp=VA*24;
-					if(temp<65){ 
+					if(temp<65){
 					outportb(OUTBR,0x08);
 					outportb(OUTBR,0x01);
 					}
@@ -116,7 +119,7 @@ int main (){
 					  outportb(OUTBR,0x09);
 					  outportb(OUTBR,0x08);
 					}
-						    if(limiteaux==val){		//Al termino de un segundo grafica
+						    if(limiteaux==grafica){		//Al termino de un segundo grafica
 							    line(i*30,auxad,(1+i)*30,temp*2);
 							    outtextxy(i*30,0,numeros[i]);
 							    auxad=temp*2;
