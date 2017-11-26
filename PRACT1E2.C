@@ -21,7 +21,7 @@ unsigned char convl;
 /*Variables para el adq12*/
 int gdriver=DETECT;
 int gnode;
-char *numeros[40]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29"};
+char *numeros[40]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32"};
 char *temperatura[30]={"10","20","30","40","50","60","70","80","90","100","110","120"};
 unsigned int OUTBR, DIRBAS, STINR, CTREG, ADHIG, ADLOW;
 unsigned char Aalto;
@@ -38,7 +38,7 @@ void restablecervalores(void);
 void interrupt far (*viejo)();
 void interrupt funcionInterrunpe();
 void coordenadasy(void);
-
+void corx(void);
 /*Configuramos el vector y realizamos el divisor de frecuencia*/
 void confi(){
 	unsigned char contador_lo;
@@ -78,8 +78,24 @@ void interrupt funcionInterrunpe(){
 }
 void coordenadasy(){
  int x;
-       for(x=1;x<13;x++)
-	outtextxy(0,x*20,temperatura[x-1]);
+	for(x=1;x<13;x++){
+		if(x==6){
+		   outtextxy(0,130,"65");
+		   x++;
+		}else if(x==8){
+		   outtextxy(0,170,"85");
+		   x++;
+		}else{
+		   outtextxy(0,x*20,temperatura[x-1]);
+		}
+	}
+}
+
+void corx(){
+ int mn=0;
+    for(mn=0;mn<30;mn++){
+       outtextxy(mn*19,0,numeros[mn]);
+    }
 }
 
 int main (){
@@ -89,8 +105,6 @@ int main (){
 
 	printf("Escribe la frecuencia que sea mayor a 18\n");
 	scanf("%d", &val);
-	printf("Escribe la frecuencia con la que se desea graficar\n");
-	scanf("%d",&grafica);
 	if(val>18){
 	confi();
 	printf("\n");
@@ -99,7 +113,8 @@ int main (){
 	   Cvalor=inportb(ADLOW); //Inicia la conversion
 	   initgraph(&gdriver,&gnode,"C:\\BORLANDC\\BGI");
 	   coordenadasy();
-		while(limitef<21){
+	   corx();
+		while(limitef<31){
 			if(limite==1){ //Entra a la bandera de la interrupcion
 			    limite=0;
 			    limiteaux++;
@@ -119,12 +134,11 @@ int main (){
 					  outportb(OUTBR,0x09);
 					  outportb(OUTBR,0x08);
 					}
-						    if(limiteaux==grafica){		//Al termino de un segundo grafica
-							    line(i*30,auxad,(1+i)*30,temp*2);
-							    outtextxy(i*30,0,numeros[i]);
-							    auxad=temp*2;
+					line(i,auxad,(1*i),temp*2);
+					auxad=temp*2;
+					i++;
+						    if(limiteaux==val){	       //grafica la frecuencia
 							    limitef++;
-							    i++;
 							    limiteaux=0;
 						    }
 			}
@@ -137,3 +151,4 @@ int main (){
 	getch();
 	return 0;
 }
+
